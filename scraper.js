@@ -15,7 +15,25 @@ async function quotesScraper() {
         const html = response.data;
 
         //load the html into cheerio library so we can query it for the data we need
+        const $ = cheerio.load(html);
+        const quotes = [];
+
+        $('div.quote').each((i, el) => {
+            const text = $(el).find('span.text').text().trim();
+            const author = $(el).find('small.author').text().trim();
+            const tags = [];
+            $(el).find('div.tags a.tag').each((_, t) => tags.push($(t).text().trim()));
+            quotes.push({ text, author, tags });
+        });
+
+        fs.mkdirSync('output', { recursive: true });
+        fs.writeFileSync('output/quotes.json', JSON.stringify(quotes, null, 2), 'utf8');
+        console.log('Wrote', quotes.length, 'quotes to output/quotes.json');
+        console.table(quotes);
+
     } catch (error){
-        console.log ('Error scrapping quotes: ', error.message)
+        console.log ('Error scrapping quotes: ', error.message);
     }
 }
+
+quotesScraper();
