@@ -1,6 +1,6 @@
 //importing necessary tools we need axios, cheerio and fs
 const axios = require('axios');
-const cheerio = require('axios');
+const cheerio = require('cheerio');
 const fs = require('fs');
 
 //sources with the quotes to extract
